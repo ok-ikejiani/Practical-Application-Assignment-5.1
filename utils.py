@@ -62,46 +62,98 @@ def plot_coupon_acceptance(df, coupon_type):
     plt.show()
 
 
-def plot_comparison( 
-        categories, 
-        option_1_df, 
-        options_2_df,
-        title,
-        xlabel,
-        ylabel,
-    ):
-    option_1_rates = count_acceptance(option_1_df)
-    option_2_rates = count_acceptance(options_2_df)
+# def plot_comparison( 
+    #     categories, 
+    #     option_1_df, 
+    #     options_2_df,
+    #     title,
+    #     xlabel,
+    #     ylabel,
+    # ):
+    # option_1_rates = count_acceptance(option_1_df)
+    # option_2_rates = count_acceptance(options_2_df)
 
+    # # Plot graph( using seaborn for some variation)
+    # plot_data = {
+    #     'Categories':categories, 
+    #     'Acceptance Rates': [
+    #         (option_1_rates['accepted'] / option_1_rates['total'])*100,
+    #         (option_2_rates['accepted']/option_2_rates['total'])*100
+    #     ]
+    # }
+    # plot_dataframe = pd.DataFrame(plot_data)
+
+    # # Create figure with specified size
+    # plt.figure(figsize=(10, 6))
+
+    # # Create bar graph
+    # colors = ['#4CAF50', '#FF5733'] #Bar colors
+    # barplot = sns.barplot(x='Categories', y='Acceptance Rates', data=plot_dataframe, palette=colors)
+
+    # # Set labels and title
+    # plt.xlabel(xlabel)
+    # plt.ylabel(ylabel)
+    # plt.title(title)
+
+    # # Format y-axis as percentages
+    # barplot.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{int(x)}%'))
+    # plt.ylim(0, 100)
+
+    # # Save the plot to /images directory
+    # plt.tight_layout()
+    # plt.savefig(f'images/{to_snake_case(title)}.png')
+
+    # # Show the graph
+    # plt.show()
+
+
+
+def plot_comparison(
+        categories, 
+        options, 
+        title, 
+        xlabel, 
+        ylabel
+    ):
+    acceptance_rates = []
+    
+    # Calculate acceptance rates for each option
+    for option_df in options:
+        rates = count_acceptance(option_df)
+        acceptance_rate = (rates['accepted'] / rates['total']) * 100
+        acceptance_rates.append(acceptance_rate)
+    
     # Plot graph( using seaborn for some variation)
     plot_data = {
-        'Categories':categories, 
-        'Acceptance Rates': [
-            (option_1_rates['accepted'] / option_1_rates['total'])*100,
-            (option_2_rates['accepted']/option_2_rates['total'])*100
-        ]
+        'Categories': categories, 
+        'Acceptance Rates': acceptance_rates
     }
     plot_dataframe = pd.DataFrame(plot_data)
-
+    
     # Create figure with specified size
     plt.figure(figsize=(10, 6))
-
+    
     # Create bar graph
-    colors = ['#4CAF50', '#FF5733'] #Bar colors
+    colors = sns.color_palette("husl", len(options))  # Generate colors for each option
     barplot = sns.barplot(x='Categories', y='Acceptance Rates', data=plot_dataframe, palette=colors)
-
+    
     # Set labels and title
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.title(title)
-
+    
     # Format y-axis as percentages
     barplot.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{int(x)}%'))
     plt.ylim(0, 100)
-
+    
     # Save the plot to /images directory
     plt.tight_layout()
     plt.savefig(f'images/{to_snake_case(title)}.png')
-
+    
     # Show the graph
     plt.show()
+
+# Example usage:
+# categories = ['Category1', 'Category2']
+# options = [option_1_df, option_2_df, option_3_df]
+# plot_comparison(categories, options, "Comparison Title", "X Axis Label", "Y Axis Label")
